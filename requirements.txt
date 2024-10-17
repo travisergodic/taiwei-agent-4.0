@@ -1,0 +1,4 @@
+redis
+qianfan
+python-dotenv
+tqdm

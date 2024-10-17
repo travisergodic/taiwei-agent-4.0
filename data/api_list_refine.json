@@ -1,0 +1,49 @@
+{"name": "ticket_info_query", "description": "查询火车、飞机、汽车的最短耗时和最低票价，若无法直达，返回中转信息。"}
+{"name": "bd_calendar", "description": "获取指定日期的日历数据，如春节、国庆等节日或特定日期。"}
+{"name": "baidu_muti_weather", "description": "查询指定地点在特定时间段内的温度情况。"}
+{"name": "bd_gov_xianxing", "description": "查询指定城市在某日期的车辆限行尾号规则。"}
+{"name": "baidu_fule_price", "description": "查询指定日期及油种的油价信息。"}
+{"name": "get_express_info", "description": "查询指定快递单号的物流信息，可选包含快递公司名称。"}
+{"name": "scenic_spot_ticket_search", "description": "查询景点门票信息，返回景点名称、地点、价格等信息。"}
+{"name": "city_recommend_scenicspot", "description": "查询指定城市的景点推荐排行。"}
+{"name": "travel_agent_hotel", "description": "查询指定城市或区域的酒店列表，需明确查询需求。"}
+{"name": "leisure_poi_search", "description": "查询指定中心点附近的休闲娱乐 POI 点信息。"}
+{"name": "restaurant_info_query", "description": "查询指定城市或中心点的餐厅列表，按美食或餐厅类型返回。"}
+{"name": "xiecheng_note_search", "description": "查询指定城市的旅游、吃喝玩乐、住宿等攻略。"}
+{"name": "oppo_info_search_service", "description": "提供与 OPPO 手机相关的价格、售后等信息。"}
+{"name": "vivo_info_search_service", "description": "提供与 vivo 手机相关的价格、售后等信息。"}
+{"name": "foreign_exchange", "description": "进行货币兑换，例如美元兑人民币。"}
+{"name": "unit_converter", "description": "进行单位换算，如米转厘米、斤转克。"}
+{"name": "metal_price", "description": "查询贵金属价格，如黄金、白银等。"}
+{"name": "get_hy_zici", "description": "查询汉字或词语的拼音、部首、释义等信息。"}
+{"name": "get_hy_poem", "description": "查询诗词的原文、赏析、翻译和作者信息。"}
+{"name": "get_hy_poemline_general", "description": "根据条件查询符合要求的诗句。"}
+{"name": "get_hy_sentence", "description": "查询名人名言、个性签名或祝福语等。"}
+{"name": "get_hy_sentence_couplet", "description": "查询符合条件的对联。"}
+{"name": "get_data_from_poi", "description": "查询 POI 相关的基础信息，如电话、地址、营业时间等。"}
+{"name": "get_route_data_from_poi", "description": "查询城市间的路线信息。"}
+{"name": "get_congestionindex_data_from_poi", "description": "查询城市的拥堵指数及重要道路的拥堵情况。"}
+{"name": "get_stock_quotation", "description": "查询指定股票的实时交易行情。"}
+{"name": "get_exchange_rate", "description": "查询货币汇率，支持单个或两个货币的兑换。"}
+{"name": "get_index_quotation", "description": "查询指定指数的实时行情信息。"}
+{"name": "get_financial_statement", "description": "查询指定公司的财报信息，如总营收、净利润等。"}
+{"name": "get_block_quotation", "description": "查询指定板块的实时交易行情。"}
+{"name": "get_fund_quotation", "description": "查询基金的档案、持仓和历史行情。"}
+{"name": "get_etf_quotation", "description": "查询指定 ETF 的实时交易信息。"}
+{"name": "market_quotation", "description": "查询全球股市行情概览，包括主要指数和资金流向。"}
+{"name": "get_future_quotation", "description": "查询指定期货的实时行情数据。"}
+{"name": "get_same_funds", "description": "查询与指定基金相同类型的其他基金。"}
+{"name": "get_general_funds", "description": "查询指定主题的基金信息，如白酒基金、新能源基金等。"}
+{"name": "chinese_character_word_info_query", "description": "查询汉字或词语的详细信息，包括拼音、构造、释义等。"}
+{"name": "get_stock_quick_news", "description": "查询指定股票的最新资讯。"}
+{"name": "get_investment_knowledge", "description": "提供股票、基金、保险等领域的投资学习资料。"}
+{"name": "comprehensive_poetry_info_query", "description": "查询诗词的详细信息，包括原文、赏析、注释及作者信息。"}
+{"name": "get_noble_metals_price", "description": "查询贵金属的价格或趋势，如黄金、白银等。"}
+{"name": "poetry_line_search", "description": "根据指定条件查询符合的诗句。"}
+{"name": "get_stock_funds", "description": "查询持有指定股票的基金信息。"}
+{"name": "get_future_list", "description": "查询指定品类的期货数据，如铁矿石期货、原油期货。"}
+{"name": "get_same_type_funds", "description": "查询指定类型的基金，如股票型基金、债券型基金等。"}
+{"name": "get_financial_indicators", "description": "查询指定股票的金融指标数据，如营收、净利润等。"}
+{"name": "get_insurance_info", "description": "提供符合不同需求的保险产品信息。"}
+{"name": "get_base_interest_rate", "description": "查询市场利率，如 LPR、存款利率等。"}
+{"name": "get_investment_communicate", "description": "查询指定股票或指数的最新投资交流信息。"}

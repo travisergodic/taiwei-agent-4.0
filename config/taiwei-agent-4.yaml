@@ -1,0 +1,19 @@
+CRITIC:
+  model: ERNIE-4.0-8K-Latest
+  max_retry: 4
+
+SUMMARY:
+  model: ERNIE-4.0-8K-Latest
+
+EXECUTE:
+  api_retry: 3
+
+PLAN:
+  model: ERNIE-4.0-8K-Latest
+
+RETRIEVER_CRITIC:
+  model: ERNIE-4.0-8K-Latest
+
+API_HELPER:
+  model: ERNIE-3.5-8K #
+  max_retry: 2
