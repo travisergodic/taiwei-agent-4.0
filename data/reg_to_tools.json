@@ -1,5 +1,6 @@
 {
     "温度": ["baidu_muti_weather"],
+    "体感": ["baidu_muti_weather"],
     "限行尾号": ["bd_gov_xianxing"],
     "汽油": ["baidu_fule_price"],
     "柴油": ["baidu_fule_price"],
@@ -8,9 +9,12 @@
     "距离": ["get_route_data_from_poi"],
     "自驾": ["get_route_data_from_poi"],
     "过路费": ["get_route_data_from_poi"],
-    "门票": ["scenic_spot_ticket_search"],
-    "车票": ["ticket_info_query"], 
+    "门票": ["scenic_spot_ticket_search"], 
+    "(营业|開放)时间": ["scenic_spot_ticket_search", "get_data_from_poi"],
     "多长时间": ["ticket_info_query", "get_route_data_from_poi"], 
     "(火车|高铁|城际|动车|飞机)": ["ticket_info_query"],
-    "最短[\u4e00-\u9fa5]*时间": ["ticket_info_query"]
+    "最短[\u4e00-\u9fa5]*时间": ["ticket_info_query"],
+    "车票": ["ticket_info_query"],
+    "酒店": ["travel_agent_hotel"],
+    "(地铁|公交|电话｜地址)": ["get_data_from_poi"]
 }

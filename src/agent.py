@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 from src.prompt import *
 from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices
+from src.api_wrapper import API_WRAPPER
 
 
 load_dotenv()

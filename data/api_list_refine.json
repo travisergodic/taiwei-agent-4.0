@@ -1,6 +1,6 @@
 {"name": "ticket_info_query", "description": "查询火车、飞机、汽车的最短耗时和最低票价，若无法直达，返回中转信息。"}
 {"name": "bd_calendar", "description": "获取指定日期的日历数据，如春节、国庆等节日或特定日期。"}
-{"name": "baidu_muti_weather", "description": "查询指定地点在特定时间段内的温度情况。"}
+{"name": "baidu_muti_weather", "description": "查询指定地点在特定时间段内的温度、天气体感。"}
 {"name": "bd_gov_xianxing", "description": "查询指定城市在某日期的车辆限行尾号规则。"}
 {"name": "baidu_fule_price", "description": "查询指定日期及油种的油价信息。"}
 {"name": "get_express_info", "description": "查询指定快递单号的物流信息，可选包含快递公司名称。"}
@@ -21,7 +21,7 @@
 {"name": "get_hy_sentence", "description": "查询名人名言、个性签名或祝福语等。"}
 {"name": "get_hy_sentence_couplet", "description": "查询符合条件的对联。"}
 {"name": "get_data_from_poi", "description": "查询 POI 相关的基础信息，如电话、地址、营业时间等。"}
-{"name": "get_route_data_from_poi", "description": "查询城市间的路线信息。"}
+{"name": "get_route_data_from_poi", "description": "查询城市间的路线、总路程、总耗时、过路费、距离信息。"}
 {"name": "get_congestionindex_data_from_poi", "description": "查询城市的拥堵指数及重要道路的拥堵情况。"}
 {"name": "get_stock_quotation", "description": "查询指定股票的实时交易行情。"}
 {"name": "get_exchange_rate", "description": "查询货币汇率，支持单个或两个货币的兑换。"}
