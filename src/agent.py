@@ -6,7 +6,7 @@ import qianfan
 from dotenv import load_dotenv
 
 from src.prompt import *
-from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices, is_null_response
+from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices, is_null_response, is_null_result_response
 from src.api_wrapper import API_WRAPPER
 
 
@@ -186,6 +186,8 @@ class SolverAgent:
         # 產生輸出不為空的 idx
         null_indices = [idx for idx, result in enumerate(self.return_list) if is_null_response(result)]
         not_null_indices = [idx for idx in range(len(self.return_list)) if idx not in null_indices]
+        null_result_indices = [idx for idx, result in enumerate(self.return_list) if is_null_result_response(result)]
+        not_null_result_indices = [idx for idx in range(len(self.return_list)) if idx not in null_result_indices]
 
         # 產生輸出不為空的記錄
         not_null_relevant_apis = [self.relevant_APIs[idx] for idx in not_null_indices]
@@ -249,8 +251,9 @@ class SolverAgent:
                 final_relevant_responses += curr_relevant_responses
                 final_answers.append(answer)
 
-        final_relevant_apis += [self.relevant_APIs[idx] for idx in null_indices]
-        final_relevant_responses += [self.return_list[idx] for idx in null_indices] 
+
+        final_relevant_apis += [self.relevant_APIs[idx] for idx in null_result_indices]
+        final_relevant_responses += [self.return_list[idx] for idx in null_result_indices] 
 
         print(f"\nrelevant response: {final_relevant_responses}\n")
         return final_answers, final_relevant_apis
@@ -336,9 +339,8 @@ class APIHelper:
                 if not all([rk in res for rk in required_keys]):
                     continue
 
-                # self.messages += [
-                #     {"role": "assistant", "content": json.dumps(res, ensure_ascii=False)}
-                # ]
+                if not isinstance(res, dict):
+                    continue
                 return res
                 
             except Exception as e:

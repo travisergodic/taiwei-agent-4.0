@@ -32,19 +32,9 @@ CRITIC_USER_PROMPT="""
 """
 
 INITIAL_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {initial_question}"
-# FOLLOW_UP_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（问题来源：{initial_question}）"
+FOLLOW_UP_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（问题来源：{initial_question}）"
 
-FOLLOW_UP_SOLVER_PROMPT = """{follow_up_question}
 
-补充信息（仅供参考，无需处理）：
-1. 注意事项：
-   + 若部分问题无法立即解决，请先处理可解决部分。
-   + 若某个工具无法解决当前问题，请尝试其他工具。
-2. 问题来源：
-{initial_question}
-3. 相关信息：
-{relevant_infos}
-"""
 
 
 EXTRACT_UNSOLVED_QUESTION_USER_PROMPT="""

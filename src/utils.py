@@ -4,6 +4,52 @@ import json
 import yaml
 
 
+# def function_request_yiyan(f, msgs, func_list):
+#     """
+#     发送请求到一言大模型，获取返回结果。
+
+#     Args:
+#         f: 一言API的访问对象。
+#         msgs: 请求消息列表.
+#         func_list: 请求中需要调用的API列表。
+    
+#     Returns:
+#         返回值为一个包含三个元素的元组:
+#         - response: 一言大模型返回的响应结果。
+#         - func_name: 响应结果中调用的函数名，为str类型。
+#         - kwargs: 响应结果中调用的函数的参数，为dict类型。
+    
+#     """
+#     response = f.do(
+#         messages=msgs,
+#         functions=func_list, 
+#     )
+#     time.sleep(1)
+#     if response['body']['result']:
+#         return {
+#             "response": response['body']['result'], 
+#             "func_name": "", 
+#             "kwargs": ""
+#         }
+#     func_call_result = response["function_call"]
+#     func_name = func_call_result["name"]
+
+#     try:
+#         kwargs = eval(func_call_result["arguments"])
+#     except:
+#         corrected_str = func_call_result["arguments"].replace("'", '"')
+#         kwargs = json.loads(corrected_str)
+
+#     res = {
+#         "response": response, 
+#         "func_name": func_name, 
+#         "kwargs": kwargs
+#     }
+#     if "thoughts" in func_call_result:
+#         res["thoughts"] = func_call_result["thoughts"]
+#     return res
+
+
 def function_request_yiyan(f, msgs, func_list):
     """
     发送请求到一言大模型，获取返回结果。
@@ -31,12 +77,13 @@ def function_request_yiyan(f, msgs, func_list):
             "func_name": "", 
             "kwargs": ""
         }
+    
     func_call_result = response["function_call"]
     func_name = func_call_result["name"]
 
     try:
-        kwargs = eval(func_call_result["arguments"])
-    except:
+        kwargs = json.loads(func_call_result["arguments"])
+    except json.JSONDecodeError:
         corrected_str = func_call_result["arguments"].replace("'", '"')
         kwargs = json.loads(corrected_str)
 
@@ -45,6 +92,7 @@ def function_request_yiyan(f, msgs, func_list):
         "func_name": func_name, 
         "kwargs": kwargs
     }
+    
     if "thoughts" in func_call_result:
         res["thoughts"] = func_call_result["thoughts"]
     return res
@@ -205,9 +253,19 @@ def is_null_response(func_response):
     if (list(func_response.keys()) == ["Result"]) and len(func_response["Result"]) == 0:
         return True
     
+    if ("data" in func_response):
+        if not func_response["data"]:
+            return True
+    
     # if "data" in func_response:
     #     data = func_response["data"]
     #     if not data:
     #         return True
         
+    return False
+
+
+def is_null_result_response(func_response):    
+    if (list(func_response.keys()) == ["Result"]) and len(func_response["Result"]) == 0:
+        return True    
     return False

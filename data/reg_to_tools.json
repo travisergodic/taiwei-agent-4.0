@@ -5,9 +5,7 @@
     "柴油": ["baidu_fule_price"],
     "油价": ["baidu_fule_price"],
     "拥堵": ["get_congestionindex_data_from_poi"],
-    "距离": ["get_route_data_from_poi"],
-    "自驾": ["get_route_data_from_poi"],
-    "过路费": ["get_route_data_from_poi"],
+    "(距离|自驾|过路费|经度|纬度|经纬)": ["get_route_data_from_poi"],
     "门票": ["scenic_spot_ticket_search"], 
     "(营业|開放)时间": ["scenic_spot_ticket_search", "get_data_from_poi"],
     "多长时间": ["ticket_info_query", "get_route_data_from_poi"], 
@@ -19,5 +17,4 @@
     "(营收｜净利润｜净利润率)": ["get_financial_statement"],
     "指数": ["get_index_quotation"],
     "(etf|ETF)": ["get_etf_quotation"]
-
 }

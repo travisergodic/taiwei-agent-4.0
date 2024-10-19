@@ -57,6 +57,24 @@ def get_date_list(date_range_text):
 
 
 def convert_date_to_weekday(date_string):
+    try:
+        date = convert_date_string_to_data_object(date_string)    
+        weekday = date.strftime('%A')  # Get the weekday name in English
+        weekday_map = {
+            'Monday': '周一',
+            'Tuesday': '周二',
+            'Wednesday': '周三',
+            'Thursday': '周四',
+            'Friday': '周五',
+            'Saturday': '周六',
+            'Sunday': '周日'
+        }
+        return weekday_map[weekday]
+    except Exception as e:
+        return None
+
+
+def convert_date_string_to_data_object(date_string):
     # Define regex pattern to match 'x年x月x日'
     pattern_with_year = r'(\d{1,4})年(\d{1,2})月(\d{1,2})[号日]'
     pattern_without_year = r'(\d{1,2})月(\d{1,2})[号日]'
@@ -74,21 +92,8 @@ def convert_date_to_weekday(date_string):
         year = datetime.datetime.now().year
         month = int(match_without_year.group(1))
         day = int(match_without_year.group(2))
-    
-    # Get the weekday from the date (0 = Monday, 6 = Sunday)
     try:
-        date = datetime.date(year, month, day)
-        weekday = date.strftime('%A')  # Get the weekday name in English
-        weekday_map = {
-            'Monday': '周一',
-            'Tuesday': '周二',
-            'Wednesday': '周三',
-            'Thursday': '周四',
-            'Friday': '周五',
-            'Saturday': '周六',
-            'Sunday': '周日'
-        }
-        return weekday_map[weekday]
+        return datetime.date(year, month, day)
     except Exception as e:
         return None
 
@@ -141,6 +146,7 @@ def bd_gov_xianxing_api(api_name, params):
         weekday = convert_date_to_weekday(date)
         if weekday is not None:
             params["date_or_day_of_week"] = weekday
+        params["city"] = params["city"].strip("市")
         response = requests.get(url, params=params).json()
 
         if (weekday is not None) and (not is_null_response(response)):
@@ -165,13 +171,19 @@ def baidu_muti_weather_api(api_name, params):
             curr_relevant_api_list.append({"api_name": api_name, "required_parameters": params})
             curr_response_list.append(response)
         else:
+            date = convert_date_string_to_data_object(params["period"])
             for period in [f"{month}底", f"{month}中旬", f"{month}上旬"]:
                 params["period"] = period
                 response = requests.get(url, params=params).json()
-                curr_relevant_api_list.append({"api_name": api_name, "required_parameters": deepcopy(params)})
-
-                response["supplement"] = f"目前仅能提供一段时间（如{month}底、{month}中旬、{month}上旬）的信息，无法直接提供单日的温度信息"
-                curr_response_list.append(response)
+                start_date = response["start_date"]
+                end_date = response["end_date"]
+                if (start_date <= date) and (date <= end_date):
+                    curr_relevant_api_list.append({"api_name": api_name, "required_parameters": deepcopy(params)})
+                    curr_response_list.append(response)
+                    break
+                
+            if not is_null_response(response):
+                response["supplement"] = f"目前仅能提供一段时间（如{month}底、{month}中旬、{month}上旬）的信息，无法直接提供单一日期温度信息"
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:
