@@ -5,7 +5,7 @@ from copy import deepcopy
 import datetime
 
 from src.registry import Register
-from src.utils import load_api_list
+from src.utils import load_api_list, is_null_response
 import src.supplement_api
 
 
@@ -72,8 +72,8 @@ def convert_date_to_weekday(date_string):
 
     elif match_without_year:
         year = datetime.datetime.now().year
-        month = int(match_with_year.group(2))
-        day = int(match_with_year.group(3))
+        month = int(match_without_year.group(1))
+        day = int(match_without_year.group(2))
     
     # Get the weekday from the date (0 = Monday, 6 = Sunday)
     try:
@@ -142,8 +142,9 @@ def bd_gov_xianxing_api(api_name, params):
         if weekday is not None:
             params["date_or_day_of_week"] = weekday
         response = requests.get(url, params=params).json()
-        if weekday is not None:
-            response["supplement"] = {"supplement": f"{date}为{weekday}"}
+
+        if (weekday is not None) and (not is_null_response(response)):
+            response["supplement"] = f"{date}为{weekday}"
 
     except Exception as e:
         print(f"response error: {e}")
@@ -168,6 +169,8 @@ def baidu_muti_weather_api(api_name, params):
                 params["period"] = period
                 response = requests.get(url, params=params).json()
                 curr_relevant_api_list.append({"api_name": api_name, "required_parameters": deepcopy(params)})
+
+                response["supplement"] = f"目前仅能提供一段时间（如{month}底、{month}中旬、{month}上旬）的信息，无法直接提供单日的温度信息"
                 curr_response_list.append(response)
         return curr_relevant_api_list, curr_response_list
 

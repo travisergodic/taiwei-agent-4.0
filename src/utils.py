@@ -192,5 +192,22 @@ def get_unique_function_call_indices(function_call_list):
         if identifier not in seen:
             seen.add(identifier)
             unique_indices.append(idx)
-    
     return unique_indices
+
+
+def is_null_response(func_response):
+    if func_response == "error：404":
+        return True
+    
+    if len(func_response) == 0:
+        return True
+    
+    if (list(func_response.keys()) == ["Result"]) and len(func_response["Result"]) == 0:
+        return True
+    
+    # if "data" in func_response:
+    #     data = func_response["data"]
+    #     if not data:
+    #         return True
+        
+    return False

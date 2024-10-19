@@ -1,11 +1,10 @@
 {
-    "温度": ["baidu_muti_weather"],
-    "体感": ["baidu_muti_weather"],
+    "(温度|体感|温差)": ["baidu_muti_weather"],
     "限行尾号": ["bd_gov_xianxing"],
     "汽油": ["baidu_fule_price"],
     "柴油": ["baidu_fule_price"],
     "油价": ["baidu_fule_price"],
-    "拥堵指数": ["get_congestionindex_data_from_poi"],
+    "拥堵": ["get_congestionindex_data_from_poi"],
     "距离": ["get_route_data_from_poi"],
     "自驾": ["get_route_data_from_poi"],
     "过路费": ["get_route_data_from_poi"],
@@ -16,5 +15,9 @@
     "最短[\u4e00-\u9fa5]*时间": ["ticket_info_query"],
     "车票": ["ticket_info_query"],
     "酒店": ["travel_agent_hotel"],
-    "(地铁|公交|电话｜地址)": ["get_data_from_poi"]
+    "(地铁|公交|电话｜地址)": ["get_data_from_poi"],
+    "(营收｜净利润｜净利润率)": ["get_financial_statement"],
+    "指数": ["get_index_quotation"],
+    "(etf|ETF)": ["get_etf_quotation"]
+
 }

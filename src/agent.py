@@ -6,31 +6,13 @@ import qianfan
 from dotenv import load_dotenv
 
 from src.prompt import *
-from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices
+from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices, is_null_response
 from src.api_wrapper import API_WRAPPER
 
 
 load_dotenv()
 AK = os.getenv("AK")
 SK = os.getenv("SK")
-
-
-def is_null_response(func_response):
-    if func_response == "error：404":
-        return True
-    
-    if len(func_response) == 0:
-        return True
-    
-    if (list(func_response.keys()) == ["Result"]) and len(func_response["Result"]) == 0:
-        return True
-    
-    # if "data" in func_response:
-    #     data = func_response["data"]
-    #     if not data:
-    #         return True
-        
-    return False
 
 
 class SplitAgent:

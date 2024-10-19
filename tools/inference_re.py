@@ -59,7 +59,11 @@ def main():
             if i == 0:
                 solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=curr_query)
             else:
-                solver_prompt = FOLLOW_UP_SOLVER_PROMPT.format(follow_up_question=curr_query, initial_question=query)
+                solver_prompt = FOLLOW_UP_SOLVER_PROMPT.format(
+                    follow_up_question=curr_query, 
+                    initial_question=query, 
+                    relevant_infos="\n".join(answer_list)
+                )
             
             solver_agent.do(solver_prompt, retrieve_list)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()
