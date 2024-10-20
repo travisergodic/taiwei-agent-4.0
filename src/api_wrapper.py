@@ -144,20 +144,20 @@ def bd_gov_xianxing_api(api_name, params):
     try:
         date = params["date_or_day_of_week"]
         weekday = convert_date_to_weekday(date)
-        if weekday is not None:
+        if weekday is None:
+            response = {"Result": {}}
+        else:
             params["date_or_day_of_week"] = weekday
-        params["city"] = params["city"].strip("市")
-        response = requests.get(url, params=params).json()
-
-        if (weekday is not None) and (not is_null_response(response)):
-            response["supplement"] = f"{date}为{weekday}"
-
+            params["city"] = params["city"].strip("市")
+            response = requests.get(url, params=params).json()
+            if is_null_response(response):
+                response = {"Result": f"{date}{params['city']}没有限行"}
+            else:
+                response["supplement"] = f"{date}为{weekday}"
     except Exception as e:
         print(f"response error: {e}")
-        # response = "error：404"
         response = {"Result": {}}
     return [{"api_name": api_name, "required_parameters": params}], [response]
-
 
 
 @API_WRAPPER.register("baidu_muti_weather")
@@ -175,8 +175,8 @@ def baidu_muti_weather_api(api_name, params):
             for period in [f"{month}底", f"{month}中旬", f"{month}上旬"]:
                 params["period"] = period
                 response = requests.get(url, params=params).json()
-                start_date = response["start_date"]
-                end_date = response["end_date"]
+                start_date = datetime.date(*[int(ele) for ele in response["Result"]["start_date"].strip().split("-")])
+                end_date = datetime.date(*[int(ele) for ele in response["Result"]["end_date"].strip().split("-")])
                 if (start_date <= date) and (date <= end_date):
                     curr_relevant_api_list.append({"api_name": api_name, "required_parameters": deepcopy(params)})
                     curr_response_list.append(response)

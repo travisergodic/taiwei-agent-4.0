@@ -32,7 +32,7 @@ CRITIC_USER_PROMPT="""
 """
 
 INITIAL_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {initial_question}"
-FOLLOW_UP_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（问题来源：{initial_question}）"
+FOLLOW_UP_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（原始问题：{initial_question}[原始问题仅供参考，无需处理]）"
 
 
 

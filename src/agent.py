@@ -83,15 +83,15 @@ class SolverAgent:
         self.api_helper = api_helper
         self.restart()
 
-    def __repr__(self):
-        "Solver Agent"
-
     def restart(self):
         self.messages = []
         self.api_list = None
         self.relevant_APIs = []
         self.return_list = []
         self.answer = None
+
+    def __repr__(self):
+        "Solver Agent"
 
     def do(self, query, retrieve_list):
         self.query = query
@@ -179,7 +179,7 @@ class SolverAgent:
         MAX_TOKEN = 19500
 
         # 移除重複的 API 調用
-        unique_indices = get_unique_function_call_indices(self.relevant_APIs)
+        unique_indices = range(len(self.relevant_APIs)) # get_unique_function_call_indices(self.relevant_APIs)
         self.relevant_APIs = [self.relevant_APIs[idx] for idx in unique_indices]
         self.return_list = [self.return_list[idx] for idx in unique_indices] 
 
@@ -187,7 +187,6 @@ class SolverAgent:
         null_indices = [idx for idx, result in enumerate(self.return_list) if is_null_response(result)]
         not_null_indices = [idx for idx in range(len(self.return_list)) if idx not in null_indices]
         null_result_indices = [idx for idx, result in enumerate(self.return_list) if is_null_result_response(result)]
-        not_null_result_indices = [idx for idx in range(len(self.return_list)) if idx not in null_result_indices]
 
         # 產生輸出不為空的記錄
         not_null_relevant_apis = [self.relevant_APIs[idx] for idx in not_null_indices]
@@ -251,9 +250,12 @@ class SolverAgent:
                 final_relevant_responses += curr_relevant_responses
                 final_answers.append(answer)
 
-
-        final_relevant_apis += [self.relevant_APIs[idx] for idx in null_result_indices]
-        final_relevant_responses += [self.return_list[idx] for idx in null_result_indices] 
+        null_result_responses = [self.return_list[idx] for idx in null_result_indices] 
+        null_result_relevant_apis = [self.relevant_APIs[idx] for idx in null_result_indices]
+        
+        null_result_unique_indices = get_unique_function_call_indices(null_result_relevant_apis)
+        # final_relevant_apis += [null_result_relevant_apis[idx] for idx in null_result_unique_indices]
+        # final_relevant_responses += [null_result_responses[idx] for idx in null_result_unique_indices]
 
         print(f"\nrelevant response: {final_relevant_responses}\n")
         return final_answers, final_relevant_apis

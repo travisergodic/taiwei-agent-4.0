@@ -45,7 +45,6 @@ def main():
         answer_list, relevant_apis = [], []
         for i in range(args.max_iter):
             solver_agent.restart()
-
             if not args.manual_retrive:
                 retrive_idxs = retriever.retrieve(curr_query, args.topk)
             else:
