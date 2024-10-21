@@ -6,7 +6,7 @@ sys.path.insert(0, os.getcwd())
 
 from src.utils import load_yaml, load_api_list, load_json, get_unique_function_call_indices, load_reg_to_tools, load_api_list_refine
 from src.retrieve import Retriever
-from src.prompt import INITIAL_SOLVER_PROMPT, FOLLOW_UP_SOLVER_PROMPT
+from src.prompt import INITIAL_SOLVER_PROMPT, FOLLOW_UP_SOLVER_PROMPT, hint_prompt_template
 from src.agent import ComplexCriticAgent, SummaryAgent, SolverAgent, APIHelper
 
 
@@ -47,7 +47,7 @@ def main():
         for i, iter in enumerate(args.max_iter):
             solver_agent.restart()
             if not args.manual_retrive:
-                retrive_idxs = retriever.retrieve(curr_query, args.topk)
+                retrive_idxs, tools_to_keyword = retriever.retrieve(curr_query, args.topk)
             else:
                 retrive_idxs = args.manual_retrive
 
@@ -64,6 +64,8 @@ def main():
                     initial_question=query, 
                     relevant_infos="\n".join(answer_list)
                 )
+            if len(tools_to_keyword) > 0:
+                solver_prompt += hint_prompt_template(tools_to_keyword)
             
             solver_agent.do(solver_prompt, retrieve_list, iteration=iter)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()

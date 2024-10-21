@@ -322,7 +322,9 @@ class APIHelper:
         )
         self.messages += [{"role": "user", "content": content}]
 
-        for _ in range(self.max_retry):
+        for i in range(self.max_retry):
+            if i > 0:
+                time.sleep(1)
             response = self.f.do(
                 messages=self.messages,
                 top_p=0.5,
@@ -346,5 +348,4 @@ class APIHelper:
                 
             except Exception as e:
                 print(f"API helper 解码错误: {e}")
-                time.sleep(1)
         return None
