@@ -43,7 +43,8 @@ def main():
 
         curr_query = query
         answer_list, relevant_apis = [], []
-        for i in range(args.max_iter):
+        num_round = len(args.max_iter)
+        for i, iter in enumerate(args.max_iter):
             solver_agent.restart()
             if not args.manual_retrive:
                 retrive_idxs = retriever.retrieve(curr_query, args.topk)
@@ -64,7 +65,7 @@ def main():
                     relevant_infos="\n".join(answer_list)
                 )
             
-            solver_agent.do(solver_prompt, retrieve_list)
+            solver_agent.do(solver_prompt, retrieve_list, iteration=iter)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()
             print("relevant_APIs:", curr_relevant_apis)
             
@@ -79,7 +80,7 @@ def main():
             answer_list += curr_answer_list
             relevant_apis += curr_relevant_apis
 
-            if i < (args.max_iter-1):
+            if i < (num_round-1):
                 # 判斷是否全部回答
                 is_success, curr_query = critic_agent.do(curr_query, answer_list)
 
@@ -131,7 +132,7 @@ if __name__ == "__main__":
     parser.add_argument("--q_indices", nargs='+', type=int)
     parser.add_argument("--topk", type=int, required=True)
     parser.add_argument("--save_path", type=str, required=True)
-    parser.add_argument("--max_iter", type=int, required=True)
+    parser.add_argument("--max_iter", nargs='+', type=int, required=True)
     parser.add_argument("--manual_retrive", nargs='+', type=int, default=[])
     parser.add_argument("--retriever_critic", action="store_true")
     args = parser.parse_args()

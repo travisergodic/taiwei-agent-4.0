@@ -75,10 +75,9 @@ class SummaryAgent:
     
 
 class SolverAgent:
-    def __init__(self, total_retry, api_retry, api_helper=None, **kwargs):
+    def __init__(self, api_retry, api_helper=None, **kwargs):
         self.f_function = qianfan.ChatCompletion(ak=AK, sk=SK, **kwargs)
         self.f_summary = qianfan.ChatCompletion(model="ERNIE-4.0-8K-Latest", ak=AK, sk=SK)
-        self.total_retry = total_retry
         self.api_retry = api_retry
         self.api_helper = api_helper
         self.restart()
@@ -93,7 +92,7 @@ class SolverAgent:
     def __repr__(self):
         "Solver Agent"
 
-    def do(self, query, retrieve_list):
+    def do(self, query, retrieve_list, iteration):
         self.query = query
         url_list = [{"name": api["name"], "paths": api["paths"]} for api in retrieve_list]
         api_list = [{k: v for k, v in api.items() if k != "paths"} for api in retrieve_list]
@@ -101,7 +100,7 @@ class SolverAgent:
 
         self.messages = [{"role": "user", "content": query}]
         n = 1
-        while n <= self.total_retry:
+        while n <= iteration:
             try:
                 res = function_request_yiyan(self.f_function, self.messages, api_list)
                 response, func_name, kwargs = res["response"], res["func_name"], res["kwargs"]

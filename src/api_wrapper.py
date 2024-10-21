@@ -126,8 +126,8 @@ def default_api_wrapper(api_name, params):
             url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
             response = requests.get(url, params=params).json()
             # 工具返回结果过长，做截断处理
-            if len(str(response)) > 3500:
-                response = truncate_json(response, 3500)        
+            if len(str(response)) > 2500:
+                response = truncate_json(response, 2500)        
     except Exception as e:
         print(f"response error: {e}")
         # response = "error：404"
@@ -171,7 +171,8 @@ def baidu_muti_weather_api(api_name, params):
             curr_relevant_api_list.append({"api_name": api_name, "required_parameters": params})
             curr_response_list.append(response)
         else:
-            date = convert_date_string_to_data_object(params["period"])
+            date_string = params["period"]
+            date = convert_date_string_to_data_object(date_string)
             for period in [f"{month}底", f"{month}中旬", f"{month}上旬"]:
                 params["period"] = period
                 response = requests.get(url, params=params).json()
@@ -183,7 +184,7 @@ def baidu_muti_weather_api(api_name, params):
                     break
                 
             if not is_null_response(response):
-                response["supplement"] = f"目前仅能提供一段时间（如{month}底、{month}中旬、{month}上旬）的信息，无法直接提供单一日期温度信息"
+                response["supplement"] = f"无法直接提供单一日期温度信息，{date_string}為{period}"
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:

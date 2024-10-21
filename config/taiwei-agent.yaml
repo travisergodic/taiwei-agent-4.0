@@ -7,7 +7,6 @@ SUMMARY:
 
 SOLVER:
   model: ERNIE-Functions-8K
-  total_retry: 8
   api_retry: 3
 
 API_HELPER:
