@@ -6,7 +6,7 @@ import datetime
 import logging
 
 from src.registry import Register
-from src.utils import load_api_list, is_null_response
+from src.utils import load_api_list, is_null_response, is_null_result_response
 import src.supplement_api
 
 
@@ -154,13 +154,18 @@ def bd_gov_xianxing_api(api_name, params):
             params["date_or_day_of_week"] = weekday
             params["city"] = params["city"].strip("市")
             response = requests.get(url, params=params).json()
-            if is_null_response(response):
+            # 沒有限行
+            if is_null_result_response(response):
                 response = {"Result": f"{date}{params['city']}没有限行"}
+            # 找不到結果
+            elif is_null_response(response):
+                return response
+            # 找到結果
             else:
                 response["supplement"] = f"{date}为{weekday}"
     except Exception as e:
         logger.info(f"response error: {e}")
-        response = {"Result": {}}
+        response = {}
     return [{"api_name": api_name, "required_parameters": params}], [response]
 
 
