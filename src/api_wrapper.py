@@ -3,10 +3,14 @@ import json
 import requests
 from copy import deepcopy
 import datetime
+import logging
 
 from src.registry import Register
 from src.utils import load_api_list, is_null_response
 import src.supplement_api
+
+
+logger = logging.getLogger(__name__)
 
 
 name_to_paths = {api["name"]:api["paths"] for api in load_api_list()}
@@ -129,7 +133,7 @@ def default_api_wrapper(api_name, params):
             if len(str(response)) > 2500:
                 response = truncate_json(response, 2500)        
     except Exception as e:
-        print(f"response error: {e}")
+        logger.info(f"response error: {e}")
         # response = "error：404"
         response = {"Result": {}}
     return [{"api_name": api_name, "required_parameters": params}], [response]
@@ -155,7 +159,7 @@ def bd_gov_xianxing_api(api_name, params):
             else:
                 response["supplement"] = f"{date}为{weekday}"
     except Exception as e:
-        print(f"response error: {e}")
+        logger.info(f"response error: {e}")
         response = {"Result": {}}
     return [{"api_name": api_name, "required_parameters": params}], [response]
 
@@ -188,7 +192,7 @@ def baidu_muti_weather_api(api_name, params):
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:
-        print(f"response error: {e}")
+        logger.info(f"response error: {e}")
         # response = "error：404"
         response = {"Result": {}}
     return [{"api_name": api_name, "required_parameters": params}], [response]
@@ -214,7 +218,7 @@ def baidu_fule_price_api(api_name, params):
         return curr_relevant_api_list, curr_response_list
     
     except Exception as e:
-        print(f"response error: {e}")
+        logger.info(f"response error: {e}")
         return [{"api_name": api_name, "required_parameters": params}], [{"Result": {}}]
     
 
@@ -238,5 +242,5 @@ def ticket_info_query_api(api_name, params):
         return curr_relevant_api_list, curr_response_list
     
     except Exception as e:
-        print(f"response error: {e}")
+        logger.info(f"response error: {e}")
         return [{"api_name": api_name, "required_parameters": params}], [{"Result": {}}]

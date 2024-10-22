@@ -8,14 +8,16 @@ from src.utils import load_yaml, load_api_list, load_json, get_unique_function_c
 from src.retrieve import Retriever
 from src.prompt import INITIAL_SOLVER_PROMPT, FOLLOW_UP_SOLVER_PROMPT, hint_prompt_template
 from src.agent import ComplexCriticAgent, SummaryAgent, SolverAgent, APIHelper
+from src.logger_helper import setup_logger
 
+logger = setup_logger()
 
 def main():
     api_list = load_api_list()
     api_list_refine = load_api_list_refine()
     reg_to_tools = load_reg_to_tools()
     records = load_json(args.dataset)
-    print(f"共 {len(api_list)} 支 API")
+    logger.info(f"共 {len(api_list)} 支 API")
 
     if args.q_indices:
         records = [records[idx] for idx in args.q_indices]
@@ -39,7 +41,7 @@ def main():
         qid = record["qid"]
         query = record["query"]
 
-        print(f"({qid}) 用户query：{query}")
+        logger.info(f"({qid}) 用户query：{query}")
 
         curr_query = query
         answer_list, relevant_apis = [], []
@@ -52,7 +54,7 @@ def main():
                 retrive_idxs = args.manual_retrive
 
             retrieve_list = [api_list[idx] for idx in retrive_idxs]
-            print(f"提取 API：{[ele['name'] for ele in retrieve_list]}")
+            logger.info(f"提取 API：{[ele['name'] for ele in retrieve_list]}")
             if len(retrieve_list) == 0:
                 break
             
@@ -69,14 +71,14 @@ def main():
             
             solver_agent.do(solver_prompt, retrieve_list, iteration=iter)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()
-            print("relevant_APIs:", curr_relevant_apis)
+            logger.info("relevant_APIs:", curr_relevant_apis)
             
             # solver agent 未給出答案
             if len(curr_answer_list) == 0:
-                print("Solver Agent：此轮未给出答案")
+                logger.info("Solver Agent：此轮未给出答案")
                 continue
             else:
-                print(f"Solver Agent 给出答案：{curr_answer_list}")
+                logger.info(f"Solver Agent 给出答案：{curr_answer_list}")
                 
             # solver agent 給出答案
             answer_list += curr_answer_list
@@ -87,9 +89,9 @@ def main():
                 is_success, curr_query = critic_agent.do(curr_query, answer_list)
 
                 if is_success == True:
-                    print(f"Complex Critic 评估问题已解决，退出循环")
+                    logger.info(f"Complex Critic 评估问题已解决，退出循环")
                 elif is_success == False:
-                    print(f"Complex Critic 提出后续问题：{curr_query}")
+                    logger.info(f"Complex Critic 提出后续问题：{curr_query}")
                 else: # is_succes == None
                     continue
 
@@ -98,7 +100,7 @@ def main():
 
         # > 1 個以上回答，用 summary agent 做集成
         if len(answer_list) > 1:
-            print("answer_list:", answer_list)
+            logger.info("answer_list:", answer_list)
             final_answer = summary_agent.do(query, answer_list)
 
         # ==1 直接是答案
@@ -114,14 +116,14 @@ def main():
                 "query": query, "query_id": qid, 
                 "result": final_answer, "relevant APIs": relevant_apis
             }
-            print(f"最终答案：{final_answer}")
+            logger.info(f"最终答案：{final_answer}")
             
         else:
             reply = {
                 "query": query, "query_id": qid, 
                 "result": "抱歉，无法回答此问题。", "relevant APIs": relevant_apis
             }
-            print("抱歉，无法回答此问题。")
+            logger.info("抱歉，无法回答此问题。")
         
         with open(args.save_path, "a", encoding='utf-8') as f:
             f.write(json.dumps(reply, ensure_ascii=False) + "\n")

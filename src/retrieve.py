@@ -1,6 +1,7 @@
 import re
 import os
 import time
+import logging
 
 import qianfan
 import paddle
@@ -8,10 +9,10 @@ from dotenv import load_dotenv
 # from paddlenlp.transformers import AutoModel, AutoTokenizer
 
 from src.prompt import RECOMMEND_PROMPT
+from src.constants import AK, SK
 
-load_dotenv()
-AK = os.getenv("AK")
-SK = os.getenv("SK")
+
+logger = logging.getLogger(__name__)
 
 
 class Retriever:

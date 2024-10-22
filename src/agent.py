@@ -1,18 +1,17 @@
 import os
 import json
 import time
+import logging
 
 import qianfan
-from dotenv import load_dotenv
 
 from src.prompt import *
 from src.utils import function_request_yiyan, decode_json, json_to_markdown, split_indices_by_tokens, get_unique_function_call_indices, is_null_response, is_null_result_response
 from src.api_wrapper import API_WRAPPER
+from src.constants import AK, SK
 
 
-load_dotenv()
-AK = os.getenv("AK")
-SK = os.getenv("SK")
+logger = logging.getLogger(__name__)
 
 
 class SplitAgent:
@@ -32,7 +31,7 @@ class SplitAgent:
                 end_idx = len(res) - res[::-1].find(']')
                 return eval(res[start_idx: end_idx])
             except:
-                print(f"SplitAgent 输出不符合规范: {res}")
+                logger.info(f"SplitAgent 输出不符合规范: {res}")
     
 
 class SimpleCriticAgent:
@@ -107,7 +106,7 @@ class SolverAgent:
             except Exception as e:
                 if "the max input characters" in str(e):
                     break
-                print(f"请求一言模型失败: {e}")
+                logger.info(f"请求一言模型失败: {e}")
             
             if isinstance(response, str):
                 self.answer = response
@@ -119,7 +118,7 @@ class SolverAgent:
                 next(item["paths"] for item in url_list if item["name"] == func_name)
 
             except StopIteration:
-                print(f"函数名称 {func_name} 不存在，重新调用函数!")
+                logger.info(f"函数名称 {func_name} 不存在，重新调用函数!")
                 n += 1
                 time.sleep(1)
                 continue
@@ -135,8 +134,8 @@ class SolverAgent:
                 curr_agent_name = "Solver agent" if i == 0 else "Helper agent"
 
                 for relevant_api, curr_response in zip(curr_relevant_api_list, curr_response_list):
-                    print(f"{curr_agent_name} 调用函数：{relevant_api['api_name']}，参数：{relevant_api['required_parameters']}")
-                    print(f"函数返回：{curr_response}")
+                    logger.info(f"{curr_agent_name} 调用函数：{relevant_api['api_name']}，参数：{relevant_api['required_parameters']}")
+                    logger.info(f"函数返回：{curr_response}")
 
                 # 失敗情境，有 API helper
                 if all([is_null_response(ele) for ele in curr_response_list]):
@@ -235,7 +234,7 @@ class SolverAgent:
                     break
 
                 except Exception as e:
-                    print(f"ernie4_summary 解碼錯誤：{e}")
+                    logger.info(f"ernie4_summary 解碼錯誤：{e}")
 
             if not decode_success:
                 continue
@@ -256,7 +255,7 @@ class SolverAgent:
         # final_relevant_apis += [null_result_relevant_apis[idx] for idx in null_result_unique_indices]
         # final_relevant_responses += [null_result_responses[idx] for idx in null_result_unique_indices]
 
-        print(f"\nrelevant response: {final_relevant_responses}\n")
+        logger.info(f"\nrelevant response: {final_relevant_responses}\n")
         return final_answers, final_relevant_apis
 
 
@@ -287,7 +286,7 @@ class ComplexCriticAgent:
                     time.sleep(1)
                 
             except Exception as e:
-                print(f"Complex Critic 解码错误: {e}")
+                logger.info(f"Complex Critic 解码错误: {e}")
                 time.sleep(1)
         return None, None
     
@@ -323,14 +322,16 @@ class APIHelper:
         self.messages += [{"role": "user", "content": content}]
 
         for i in range(self.max_retry):
-            if i > 0:
-                time.sleep(1)
-            response = self.f.do(
-                messages=self.messages,
-                top_p=0.5,
-                temperature=0.5
-            )
-            raw = response['body']['result']
+            time.sleep(1)
+            try:
+                response = self.f.do(
+                    messages=self.messages,
+                    top_p=0.5,
+                    temperature=0.5
+                )
+                raw = response['body']['result']
+            except Exception as e:
+                continue
             try:
                 res = decode_json(raw)
                 all_keys = self.api_list[api_idx]["parameters"]["properties"].keys()
@@ -347,5 +348,5 @@ class APIHelper:
                 return res
                 
             except Exception as e:
-                print(f"API helper 解码错误: {e}")
+                logger.info(f"API helper 解码错误: {e}")
         return None
