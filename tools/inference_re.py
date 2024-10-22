@@ -66,12 +66,12 @@ def main():
                     initial_question=query, 
                     relevant_infos="\n".join(answer_list)
                 )
-            if len(tools_to_keyword) > 0:
-                solver_prompt += hint_prompt_template(tools_to_keyword)
+            # if len(tools_to_keyword) > 0:
+            #     solver_prompt += hint_prompt_template(tools_to_keyword)
             
             solver_agent.do(solver_prompt, retrieve_list, iteration=iter)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()
-            logger.info("relevant_APIs:", curr_relevant_apis)
+            logger.info(f"relevant_APIs: {curr_relevant_apis}")
             
             # solver agent 未給出答案
             if len(curr_answer_list) == 0:
@@ -100,7 +100,7 @@ def main():
 
         # > 1 個以上回答，用 summary agent 做集成
         if len(answer_list) > 1:
-            logger.info("answer_list:", answer_list)
+            logger.info(f"answer_list: {str(answer_list)}")
             final_answer = summary_agent.do(query, answer_list)
 
         # ==1 直接是答案

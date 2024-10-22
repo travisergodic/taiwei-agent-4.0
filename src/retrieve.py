@@ -42,8 +42,7 @@ class Retriever:
 
         for retry in range(6):
             f = self.f1 if retry < 3 else self.f2
-            if retry > 0: 
-                time.sleep(1)
+            time.sleep(1)
             response = f.do(
                 messages=[{"role": "user", "content": content}],
                 top_p=0.3,

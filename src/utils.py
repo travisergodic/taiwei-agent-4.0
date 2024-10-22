@@ -66,11 +66,11 @@ def function_request_yiyan(f, msgs, func_list):
         - kwargs: 响应结果中调用的函数的参数，为dict类型。
     
     """
+    time.sleep(1)
     response = f.do(
         messages=msgs,
         functions=func_list, 
     )
-    time.sleep(1)
     if response['body']['result']:
         return {
             "response": response['body']['result'], 

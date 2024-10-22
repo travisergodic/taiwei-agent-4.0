@@ -120,7 +120,6 @@ class SolverAgent:
             except StopIteration:
                 logger.info(f"函数名称 {func_name} 不存在，重新调用函数!")
                 n += 1
-                time.sleep(1)
                 continue
             
             # 打 API
@@ -268,6 +267,7 @@ class ComplexCriticAgent:
         for _ in range(self.max_retry):
             content = EXTRACT_UNSOLVED_QUESTION_USER_PROMPT.format(question=query, answer_list="\n".join(answer_list))
             messages = [{"role": "user", "content": content}]
+            time.sleep(1)
             response = self.f.do(
                 messages=messages,
                 top_p=0.1,
@@ -282,8 +282,6 @@ class ComplexCriticAgent:
                     return True, res["unsolved_query"]
                 if res["is_success"].startswith("N"):
                     return False, res["unsolved_query"]
-                else:
-                    time.sleep(1)
                 
             except Exception as e:
                 logger.info(f"Complex Critic 解码错误: {e}")
