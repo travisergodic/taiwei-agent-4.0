@@ -67,7 +67,7 @@ class Retriever:
                 continue
             new_llm_retrieve_list.append(tool)
             llm_retrieve_set.add(tool)
-        return (reg_retrieve_list + new_llm_retrieve_list), tools_to_keyword
+        return reg_retrieve_list, new_llm_retrieve_list, tools_to_keyword
     
     def match_tool_by_reg(self, query):
         tool_indices = []

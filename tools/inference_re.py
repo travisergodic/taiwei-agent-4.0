@@ -49,9 +49,18 @@ def main():
         for i, iter in enumerate(args.max_iter):
             solver_agent.restart()
             if not args.manual_retrive:
-                retrive_idxs, tools_to_keyword = retriever.retrieve(curr_query, args.topk)
+                reg_retrive_idxs, llm_retrieve_idxs, tools_to_keyword = retriever.retrieve(curr_query, args.topk)
             else:
                 retrive_idxs = args.manual_retrive
+
+            if i > 0:
+                retrive_idxs = reg_retrive_idxs + llm_retrieve_idxs
+            # 第一次先解決簡單的問題
+            else:
+                if reg_retrive_idxs > 0:
+                    retrive_idxs = reg_retrive_idxs
+                else:
+                    retrive_idxs = llm_retrieve_idxs
 
             retrieve_list = [api_list[idx] for idx in retrive_idxs]
             logger.info(f"提取 API：{[ele['name'] for ele in retrieve_list]}")
