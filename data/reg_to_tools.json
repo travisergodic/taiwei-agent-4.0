@@ -1,6 +1,6 @@
 {
     "(温度|体感|温差)": ["baidu_muti_weather"],
-    "(限行|尾号)": ["bd_gov_xianxing"],
+    "(限号|限行|尾号)": ["bd_gov_xianxing"],
     "(汽油|柴油|油价)": ["baidu_fule_price"],
     "拥堵": ["get_congestionindex_data_from_poi"],
     "(距离|自驾|过路费|经度|纬度|经纬|座标)": ["get_route_data_from_poi"],

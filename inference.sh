@@ -16,3 +16,4 @@ $PADDLEPADDLE_PYTHON_PATH tools/inference_re.py --config_file config/taiwei-agen
                                                 --save_path result.json \
                                                 --max_iter 2 \
                                                 --complex_critic
+// "餐馆": ["restaurant_info_query"]

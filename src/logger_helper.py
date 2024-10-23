@@ -11,7 +11,7 @@ log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - %(pathname)s:%(lin
 log_console_format = "[%(levelname)s] - %(asctime)s - %(name)s : %(message)s"
 
 
-def setup_logger(folder_name: str=LOGDIR, level=logging.DEBUG):
+def setup_logger(folder_name: str=LOGDIR, level=logging.INFO):
     file_name = _set_folder_and_get_logging_name(folder_name)
     logger = logging.getLogger()
     logger.setLevel(level)

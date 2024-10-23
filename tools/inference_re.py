@@ -57,7 +57,7 @@ def main():
                 retrive_idxs = reg_retrive_idxs + llm_retrieve_idxs
             # 第一次先解決簡單的問題
             else:
-                if reg_retrive_idxs > 0:
+                if len(reg_retrive_idxs) > 0:
                     retrive_idxs = reg_retrive_idxs
                 else:
                     retrive_idxs = llm_retrieve_idxs
@@ -67,18 +67,21 @@ def main():
             if len(retrieve_list) == 0:
                 break
             
-            if i == 0:
-                solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=curr_query)
-            else:
-                solver_prompt = FOLLOW_UP_SOLVER_PROMPT.format(
-                    follow_up_question=curr_query, 
-                    initial_question=query, 
-                    relevant_infos="\n".join(answer_list)
-                )
+            # if i == 0:
+            #     solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=curr_query)
+            # else:
+            #     solver_prompt = FOLLOW_UP_SOLVER_PROMPT.format(
+            #         follow_up_question=curr_query, 
+            #         initial_question=query, 
+            #         relevant_infos="\n".join(answer_list)
+            #     )
             # if len(tools_to_keyword) > 0:
             #     solver_prompt += hint_prompt_template(tools_to_keyword)
             
-            solver_agent.do(solver_prompt, retrieve_list, iteration=iter)
+            if curr_query == query:    
+                solver_agent.do(curr_query, retrieve_list, iteration=iter)
+            else:
+                solver_agent.do(curr_query, retrieve_list, iteration=iter, init_query=query)
             curr_answer_list, curr_relevant_apis = solver_agent.ernie4_summary()
             logger.info(f"relevant_APIs: {curr_relevant_apis}")
             

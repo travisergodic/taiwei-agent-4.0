@@ -91,13 +91,14 @@ class SolverAgent:
     def __repr__(self):
         "Solver Agent"
 
-    def do(self, query, retrieve_list, iteration):
+    def do(self, query, retrieve_list, iteration, init_query=None):
         self.query = query
+        solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=query)
         url_list = [{"name": api["name"], "paths": api["paths"]} for api in retrieve_list]
         api_list = [{k: v for k, v in api.items() if k != "paths"} for api in retrieve_list]
         self.api_list = api_list
 
-        self.messages = [{"role": "user", "content": query}]
+        self.messages = [{"role": "user", "content": solver_prompt}]
         n = 1
         while n <= iteration:
             try:
@@ -140,8 +141,12 @@ class SolverAgent:
                 if all([is_null_response(ele) for ele in curr_response_list]):
                     # 不是最後一次 --> helper agent 重新產生 action_input
                     if i < (self.api_retry-1):
+                        if init_query is None:
+                            question = query
+                        else:
+                            question = f"{query}（原始问题：{init_query}）"
                         action_input = self.api_helper.do(
-                            question=query,
+                            question=question,
                             action_name=func_name,
                             action_input=json.dumps(action_input, ensure_ascii=True)
                         )
@@ -313,7 +318,7 @@ class APIHelper:
         #     content = API_HELPER_ERROR_RETRY_PROMPT
         # else:
         content = API_HELPER_USER_PROMPT_TEMPLATE.format(
-            question=question, 
+            question=question,
             action_input=json.dumps(action_input, ensure_ascii=False),
             action_params_doc=api_doc["parameters"]["properties"]
         )

@@ -20,6 +20,18 @@ def truncate_json(data, num_token):
     return {"Result": json.dumps(data, ensure_ascii=False)[:num_token]}
 
 
+def is_valid_date_format(date_str):
+    # Regular expressions for "xx年xx月xx日" and "xx月xx日" formats
+    full_date_pattern = r"^\d{1,2}年\d{1,2}月\d{1,2}[号日]$"
+    month_day_pattern = r"^\d{1,2}月\d{1,2}[号日]$"
+    
+    # Check if the input matches either of the two patterns
+    if re.match(full_date_pattern, date_str) or re.match(month_day_pattern, date_str):
+        return True
+    else:
+        return False
+    
+
 def get_date_list(date_range_text):
     # 检查输入是否为"X月X号到X月X号"形式
     month_day_pattern = re.match(r'(\d+)月(\d+)[号日]到(\d+)月(\d+)[号日]', date_range_text)
@@ -147,6 +159,8 @@ def bd_gov_xianxing_api(api_name, params):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
     try:
         date = params["date_or_day_of_week"]
+        if not is_valid_date_format(date):
+            raise ValueError("Invalid date format")
         weekday = convert_date_to_weekday(date)
         if weekday is None:
             response = {"Result": {}}
@@ -193,7 +207,7 @@ def baidu_muti_weather_api(api_name, params):
                     break
                 
             if not is_null_response(response):
-                response["supplement"] = f"无法直接提供单一日期温度信息，{date_string}為{period}"
+                response["supplement"] = f"请使用 {period} 的温度、体感信息代表 {date_string}"# f"无法直接提供单一日期温度信息，{date_string}為{period}"
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:
@@ -242,6 +256,9 @@ def ticket_info_query_api(api_name, params):
                 curr_response_list.append(response)
         else:
             response = requests.get(url, params=params).json()
+            if not is_null_response(response) and ("date" in response["Result"]):
+                response["Result"].pop("date")
+
             curr_relevant_api_list.append({"api_name": api_name, "required_parameters": params})
             curr_response_list.append(response)
         return curr_relevant_api_list, curr_response_list

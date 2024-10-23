@@ -32,7 +32,8 @@ CRITIC_USER_PROMPT="""
 """
 
 INITIAL_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {initial_question}"
-FOLLOW_UP_SOLVER_PROMPT = """[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（原始问题：{initial_question}[仅供参考，无需处理]）"""
+# FOLLOW_UP_SOLVER_PROMPT = """[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}（原始问题：{initial_question}[仅供参考，无需处理]）"""
+FOLLOW_UP_SOLVER_PROMPT = "[1. 若部分问题无法立即解决，请先解决其他部分 2. 若部分工具无法解决当下问题，请尝试其他工具] {follow_up_question}"
 
 def hint_prompt_template(tools_to_keyword):
    s = "\n--------\n注意：\n"
@@ -330,6 +331,7 @@ GIVE_ANSWER_PROMPT = """
 3. 精准匹配：从当前信息中筛选与问题最相关的事实。如果有多个事实与问题相关，选择最能解决问题且最可信的信息来回复。
 4. 简单算术：若需要通过算术操作得出答案，请执行必要的计算。
 5. 处理不足信息：如果某部分问题无法直接回答，但有与该部分问题相关信息，请简短提供这些信息；若完全没有相关信息，请明确表示 "无法获取相关信息"。
+6. 完整句子：回答时必须包含问题的关键信息，以确保即使单独阅读回答，也能清楚理解问题和答案的含义。
 
 请回传 JSON 格式，并包含以下字段：
 1. `answer`：对用户问题的回复，以 string 格式进行回传。
