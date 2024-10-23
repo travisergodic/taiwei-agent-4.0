@@ -2,6 +2,14 @@ import os
 import time
 import json
 import yaml
+import logging
+
+import qianfan
+from src.prompt import BRIEF_SUMMARY_PROMPT
+from src.constants import AK, SK
+
+
+logger = logging.getLogger(__name__)
 
 
 # def function_request_yiyan(f, msgs, func_list):
@@ -269,3 +277,30 @@ def is_null_result_response(func_response):
     if (list(func_response.keys()) == ["Result"]) and len(func_response["Result"]) == 0:
         return True    
     return False
+
+
+def make_brief_response(question, api, params, response_str):
+    content = BRIEF_SUMMARY_PROMPT.format(
+        question=question, 
+        api=api,
+        params=json.dumps(params, ensure_ascii=False),
+        response=response_str
+    )
+    f = qianfan.ChatCompletion(model="ERNIE-4.0-8K-Latest", ak=AK, sk=SK)
+    for i in range(3):
+        try:
+            time.sleep(1)
+            response = f.do(
+                messages=[{"role": "user", "content": content}],
+                top_p=0.1,
+                temperature=0.1
+            )
+            raw = response["result"]
+            res = decode_json(raw)
+            brief_response = res["brief_response"]
+            return {"Result": brief_response}
+
+        except Exception as e:
+            logger.info(f"ernie4_summary 解碼錯誤：{e}")
+    return {"Result": {}}
+    

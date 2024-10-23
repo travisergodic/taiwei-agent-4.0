@@ -6,7 +6,7 @@ sys.path.insert(0, os.getcwd())
 
 from src.utils import load_yaml, load_api_list, load_json, get_unique_function_call_indices, load_reg_to_tools, load_api_list_refine
 from src.retrieve import Retriever
-from src.prompt import INITIAL_SOLVER_PROMPT, FOLLOW_UP_SOLVER_PROMPT, hint_prompt_template
+# from src.prompt import INITIAL_SOLVER_PROMPT, FOLLOW_UP_SOLVER_PROMPT, hint_prompt_template
 from src.agent import ComplexCriticAgent, SummaryAgent, SolverAgent, APIHelper
 from src.logger_helper import setup_logger
 

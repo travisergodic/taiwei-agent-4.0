@@ -130,7 +130,7 @@ class SolverAgent:
             for i in range(self.api_retry):
                 api_wrapper = API_WRAPPER[func_name]
                 # 打 API
-                curr_relevant_api_list, curr_response_list = api_wrapper(func_name, action_input)
+                curr_relevant_api_list, curr_response_list = api_wrapper(func_name, action_input, self.query)
                 curr_agent_name = "Solver agent" if i == 0 else "Helper agent"
 
                 for relevant_api, curr_response in zip(curr_relevant_api_list, curr_response_list):

@@ -5,8 +5,9 @@ from copy import deepcopy
 import datetime
 import logging
 
+
 from src.registry import Register
-from src.utils import load_api_list, is_null_response, is_null_result_response
+from src.utils import load_api_list, is_null_response, is_null_result_response, make_brief_response
 import src.supplement_api
 
 
@@ -14,15 +15,17 @@ logger = logging.getLogger(__name__)
 
 
 name_to_paths = {api["name"]:api["paths"] for api in load_api_list()}
+name_to_api = {api["name"]:{k:v for k, v in api.items() if k != "paths"} for api in load_api_list()}
 
 
 def truncate_json(data, num_token):
-    return {"Result": json.dumps(data, ensure_ascii=False)[:num_token]}
+    # return {"Result": json.dumps(data, ensure_ascii=False)[:num_token]}
+    return json.dumps(data, ensure_ascii=False)[:num_token]
 
 
 def is_valid_date_format(date_str):
     # Regular expressions for "xx年xx月xx日" and "xx月xx日" formats
-    full_date_pattern = r"^\d{1,2}年\d{1,2}月\d{1,2}[号日]$"
+    full_date_pattern = r"^\d{1,4}年\d{1,2}月\d{1,2}[号日]$"
     month_day_pattern = r"^\d{1,2}月\d{1,2}[号日]$"
     
     # Check if the input matches either of the two patterns
@@ -134,7 +137,7 @@ def convert_date_to_month(date_string):
     return None
 
 
-def default_api_wrapper(api_name, params):
+def default_api_wrapper(api_name, params, question):
     try:        
         if api_name in src.supplement_api.supplement_api_list:
             return eval(f"src.supplement_api.{api_name}")(**params)
@@ -143,7 +146,9 @@ def default_api_wrapper(api_name, params):
             response = requests.get(url, params=params).json()
             # 工具返回结果过长，做截断处理
             if len(str(response)) > 2500:
-                response = truncate_json(response, 2500)        
+                response_str = truncate_json(response, 8500)
+                return make_brief_response(question, name_to_api[api_name], params, response_str)
+
     except Exception as e:
         logger.info(f"response error: {e}")
         # response = "error：404"
@@ -155,7 +160,7 @@ API_WRAPPER = Register('api_wrapper', default=default_api_wrapper)
 
 
 @API_WRAPPER.register("bd_gov_xianxing")
-def bd_gov_xianxing_api(api_name, params):
+def bd_gov_xianxing_api(api_name, params, question):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
     try:
         date = params["date_or_day_of_week"]
@@ -184,7 +189,7 @@ def bd_gov_xianxing_api(api_name, params):
 
 
 @API_WRAPPER.register("baidu_muti_weather")
-def baidu_muti_weather_api(api_name, params):
+def baidu_muti_weather_api(api_name, params, question):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
     try:
         curr_relevant_api_list, curr_response_list = [], []
@@ -207,7 +212,10 @@ def baidu_muti_weather_api(api_name, params):
                     break
                 
             if not is_null_response(response):
-                response["supplement"] = f"请使用 {period} 的温度、体感信息代表 {date_string}"# f"无法直接提供单一日期温度信息，{date_string}為{period}"
+                # response["supplement"] = f"请使用{period}的温度、体感信息代表 {date_string}"# f"无法直接提供单一日期温度信息，{date_string}為{period}"
+                response["Result"].pop("start_date")
+                response["Result"].pop("end_date")
+                response["Result"]["date"] = date_string
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:
@@ -218,7 +226,7 @@ def baidu_muti_weather_api(api_name, params):
 
 
 @API_WRAPPER.register("baidu_fule_price")
-def baidu_fule_price_api(api_name, params):
+def baidu_fule_price_api(api_name, params, question):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
     try:
         curr_relevant_api_list, curr_response_list = [], []
@@ -242,7 +250,7 @@ def baidu_fule_price_api(api_name, params):
     
 
 @API_WRAPPER.register("ticket_info_query")
-def ticket_info_query_api(api_name, params):
+def ticket_info_query_api(api_name, params, question):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
     travel_mode = params["travel_mode"]
     all_travel_mode_list = ("火车", "高铁", "城际", "动车", "飞机", "汽车")
