@@ -10,7 +10,7 @@ SOLVER:
   api_retry: 3
 
 API_HELPER:
-  model: ERNIE-3.5-8K #
+  model: ERNIE-3.5-8K
   max_retry: 2
 
 RETRIEVER_CRITIC:

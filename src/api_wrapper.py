@@ -19,7 +19,6 @@ name_to_api = {api["name"]:{k:v for k, v in api.items() if k != "paths"} for api
 
 
 def truncate_json(data, num_token):
-    # return {"Result": json.dumps(data, ensure_ascii=False)[:num_token]}
     return json.dumps(data, ensure_ascii=False)[:num_token]
 
 
@@ -146,8 +145,8 @@ def default_api_wrapper(api_name, params, question):
             response = requests.get(url, params=params).json()
             # 工具返回结果过长，做截断处理
             if len(str(response)) > 2500:
-                response_str = truncate_json(response, 8500)
-                return make_brief_response(question, name_to_api[api_name], params, response_str)
+                response_str = truncate_json(response, 2500)
+                return [{"api_name": api_name, "required_parameters": params}], [{"Result": response_str}]
 
     except Exception as e:
         logger.info(f"response error: {e}")
@@ -212,10 +211,10 @@ def baidu_muti_weather_api(api_name, params, question):
                     break
                 
             if not is_null_response(response):
-                # response["supplement"] = f"请使用{period}的温度、体感信息代表 {date_string}"# f"无法直接提供单一日期温度信息，{date_string}為{period}"
-                response["Result"].pop("start_date")
-                response["Result"].pop("end_date")
-                response["Result"]["date"] = date_string
+                response["Result"]["supplement"] = f"无法直接提供单一日期温度信息，{date_string}為{period}"  # f"请使用{period}的温度、体感信息代表 {date_string}"
+                # response["Result"].pop("start_date")
+                # response["Result"].pop("end_date")
+                # response["Result"]["date"] = date_string
         return curr_relevant_api_list, curr_response_list
 
     except Exception as e:
