@@ -105,7 +105,7 @@ class SolverAgent:
                 res = function_request_yiyan(self.f_function, self.messages, api_list)
                 response, func_name, kwargs = res["response"], res["func_name"], res["kwargs"]
             except Exception as e:
-                if "the max input characters" in str(e):
+                if ("the max input characters" in str(e)) or ("Prompt tokens too long" in str(e)):
                     break
                 logger.info(f"请求一言模型失败: {e}")
             
@@ -262,7 +262,7 @@ class SolverAgent:
         # final_relevant_responses += [null_result_responses[idx] for idx in null_result_unique_indices]
 
         logger.info(f"\nrelevant response: {final_relevant_responses}\n")
-        return final_answers, (final_relevant_apis + null_result_relevant_apis)
+        return final_answers, final_relevant_apis # + null_result_relevant_apis
 
 
 class ComplexCriticAgent:

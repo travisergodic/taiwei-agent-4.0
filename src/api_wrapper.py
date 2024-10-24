@@ -144,9 +144,9 @@ def default_api_wrapper(api_name, params, question):
             url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
             response = requests.get(url, params=params).json()
             # 工具返回结果过长，做截断处理
-            if len(str(response)) > 2500:
-                response_str = truncate_json(response, 2500)
-                return [{"api_name": api_name, "required_parameters": params}], [{"Result": response_str}]
+            if len(str(response)) > 2000:
+                response_str = truncate_json(response, 2000)
+                response = {"Result": response_str}
 
     except Exception as e:
         logger.info(f"response error: {e}")
