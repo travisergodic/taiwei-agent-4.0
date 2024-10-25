@@ -16,6 +16,6 @@
     "(etf|ETF)": ["get_etf_quotation"],
     "阴历": ["bd_calendar"],
     "(洗浴|ktv|KTV|棋牌｜娱乐)": ["leisure_poi_search"],
-    "(餐馆|烧烤店)": ["restaurant_info_query"],
+    "餐馆": ["restaurant_info_query"],
     "字典": ["get_hy_zici"]
 }
