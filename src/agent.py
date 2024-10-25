@@ -93,7 +93,8 @@ class SolverAgent:
 
     def do(self, query, retrieve_list, iteration, init_query=None):
         self.query = query
-        solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=query)
+        self.init_query = init_query
+        solver_prompt = INITIAL_SOLVER_PROMPT.format(initial_question=self.query)
         url_list = [{"name": api["name"], "paths": api["paths"]} for api in retrieve_list]
         api_list = [{k: v for k, v in api.items() if k != "paths"} for api in retrieve_list]
         self.api_list = api_list
@@ -105,7 +106,7 @@ class SolverAgent:
                 res = function_request_yiyan(self.f_function, self.messages, api_list)
                 response, func_name, kwargs = res["response"], res["func_name"], res["kwargs"]
             except Exception as e:
-                if ("the max input characters" in str(e)) or ("Prompt tokens too long" in str(e)):
+                if ("the max input characters" in str(e)) or ("tokens too long" in str(e)):
                     break
                 logger.info(f"请求一言模型失败: {e}")
             
@@ -141,10 +142,10 @@ class SolverAgent:
                 if all([is_null_response(ele) for ele in curr_response_list]):
                     # 不是最後一次 --> helper agent 重新產生 action_input
                     if i < (self.api_retry-1):
-                        if init_query is None:
-                            question = query
+                        if self.init_query is None:
+                            question = self.query
                         else:
-                            question = f"{query}（原始问题：{init_query}）"
+                            question = f"{self.query}（原始问题：{self.init_query}）" 
                         action_input = self.api_helper.do(
                             question=question,
                             action_name=func_name,

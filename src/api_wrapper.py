@@ -211,7 +211,7 @@ def baidu_muti_weather_api(api_name, params, question):
                     break
                 
             if not is_null_response(response):
-                response["Result"]["supplement"] = f"无法直接提供单一日期温度信息，{date_string}為{period}"  # f"请使用{period}的温度、体感信息代表 {date_string}"
+                response["Result"]["supplement"] = f"目前仅能提供一段时间（如{month}底、{month}中旬、{month}上旬）的信息，无法直接提供单一日期温度信息"  # f"请使用{period}的温度、体感信息代表 {date_string}"
                 # response["Result"].pop("start_date")
                 # response["Result"].pop("end_date")
                 # response["Result"]["date"] = date_string
