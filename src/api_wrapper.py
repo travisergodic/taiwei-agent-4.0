@@ -251,9 +251,9 @@ def baidu_fule_price_api(api_name, params, question):
 @API_WRAPPER.register("ticket_info_query")
 def ticket_info_query_api(api_name, params, question):
     url = "http://match-meg-search-agent-api.cloud-to-idc.aistudio.internal" + name_to_paths[api_name]
-    travel_mode = params["travel_mode"]
-    all_travel_mode_list = ("火车", "高铁", "城际", "动车", "飞机", "汽车")
     try:
+        travel_mode = params["travel_mode"]
+        all_travel_mode_list = ("火车", "高铁", "城际", "动车", "飞机", "汽车")
         curr_relevant_api_list, curr_response_list = [], []
         if travel_mode == "全部":
             for travel_mode in all_travel_mode_list:
