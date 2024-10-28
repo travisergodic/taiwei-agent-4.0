@@ -14,6 +14,4 @@ $PADDLEPADDLE_PYTHON_PATH tools/inference_re.py --config_file config/taiwei-agen
                                                 --dataset dataset.json \
                                                 --topk 5 \
                                                 --save_path result.json \
-                                                --max_iter 2 \
-                                                --complex_critic
-// "餐馆": ["restaurant_info_query"]
+                                                --max_iter 10 8 8 7

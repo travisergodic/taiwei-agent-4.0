@@ -58,7 +58,7 @@ def main():
             # 第一次先解決簡單的問題
             else:
                 if len(reg_retrive_idxs) > 0:
-                    retrive_idxs = reg_retrive_idxs
+                    retrive_idxs = reg_retrive_idxs[:args.topk]
                 else:
                     retrive_idxs = llm_retrieve_idxs
 

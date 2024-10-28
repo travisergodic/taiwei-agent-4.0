@@ -187,7 +187,7 @@ class SolverAgent:
         self.return_list = [self.return_list[idx] for idx in unique_indices] 
 
         # 產生輸出不為空的 idx
-        null_indices = [idx for idx, result in enumerate(self.return_list) if is_null_response(result)]
+        null_indices = [idx for idx, result in enumerate(self.return_list) if is_null_response(result) and (not is_null_result_response(result))]
         not_null_indices = [idx for idx in range(len(self.return_list)) if idx not in null_indices]
         null_result_indices = [idx for idx, result in enumerate(self.return_list) if is_null_result_response(result)]
 
