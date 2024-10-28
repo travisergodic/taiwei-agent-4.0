@@ -64,6 +64,7 @@ class SummaryAgent:
         content = SUMMARY_AGENT_USER_PROMPT.format(question=question, answer_list=answer_list)
 
         messages = [{"role": "user", "content": content}]
+        time.sleep(1)
         response = self.f.do(
             messages=messages,
             top_p=0.1,
@@ -223,7 +224,7 @@ class SolverAgent:
             curr_relevant_responses = [not_null_return_list[idx] for idx in chunk_indices]
 
             decode_success = False
-            for i in range(3):
+            for i in range(4):
                 try:
                     time.sleep(1)
                     response = self.f_summary.do(
@@ -272,9 +273,9 @@ class ComplexCriticAgent:
         self.max_retry = max_retry
     
     def do(self, query, answer_list):
-        for _ in range(self.max_retry):
-            content = EXTRACT_UNSOLVED_QUESTION_USER_PROMPT.format(question=query, answer_list="\n".join(answer_list))
-            messages = [{"role": "user", "content": content}]
+        content = EXTRACT_UNSOLVED_QUESTION_USER_PROMPT.format(question=query, answer_list="\n".join(answer_list))
+        messages = [{"role": "user", "content": content}]
+        for _ in range(4):
             time.sleep(1)
             response = self.f.do(
                 messages=messages,
@@ -293,7 +294,6 @@ class ComplexCriticAgent:
                 
             except Exception as e:
                 logger.info(f"Complex Critic 解码错误: {e}")
-                time.sleep(1)
         return None, None
     
 
