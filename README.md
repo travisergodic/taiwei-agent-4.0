@@ -2,7 +2,7 @@
 ## 团队信息
 1. **队名**：初级程序员的团队
 2. **队员**：胡太维（队长）
-3. **初赛名次**：6 / 1008
+3. **初赛名次**：7 / 1008
 ![alt text](assets/initial_rank.png)
 4. **决赛名次**：8 / 30
 ![alt text](assets/final_rank.png)
