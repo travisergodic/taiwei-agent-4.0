@@ -1,11 +1,14 @@
 # 百度搜索·文心智能体创新大赛”技术赛道：基于多工具调用的开放域问答智能体构建
+## [竞赛链结](https://aistudio.baidu.com/competition/detail/1235/0/introduction)
 ## 团队信息
 1. **队名**：初级程序员的团队
 2. **队员**：胡太维（队长）
 3. **初赛名次**：7 / 1008
-![alt text](assets/initial_rank.png)
+
+    ![alt text](assets/initial_rank.png)
 4. **决赛名次**：8 / 30
-![alt text](assets/final_rank.png)
+
+    ![alt text](assets/final_rank.png)
 
 ## 架构图
 ![alt text](assets/agent_system.png)
