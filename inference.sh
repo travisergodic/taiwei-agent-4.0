@@ -9,7 +9,7 @@ unset PYTHONPATH
 
 pip install qianfan redis requests
 
-# AK和SK请自己注册获取
+# 请改写 src/contants.py 中的 AK, SK
 $PADDLEPADDLE_PYTHON_PATH tools/inference_re.py --config_file config/taiwei-agent.yaml \
                                                 --dataset dataset.json \
                                                 --topk 5 \
