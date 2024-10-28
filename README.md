@@ -35,5 +35,3 @@ python tools/inference_re.py --config_file config/taiwei-agent.yaml \
 + `topk`：每一轮 LLM retriever 最多提取的工具个数。
 + `save_path`：系统回答结果的 JSON 档储存路径。
 + `max_iter`：每一轮的对话次数。以 `10 8 8 7` 为例，表示共有 4 轮对话，每轮对话的次数分别为 `10, 8, 8, 7`。
-
-
